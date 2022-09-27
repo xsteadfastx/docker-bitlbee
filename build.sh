@@ -1,11 +1,13 @@
 #!/bin/bash
 
+set -ex
+
 apt update
 apt install -y --no-install-recommends autoconf automake build-essential gettext gcc libtool make \
 libglib2.0-dev libhttp-parser-dev libotr5-dev libpurple-dev libgnutls28-dev \
 libjson-glib-dev libpng-dev libolm-dev libprotobuf-c-dev protobuf-c-compiler \
 libgcrypt20-dev libmarkdown2-dev libpurple-dev libsqlite3-dev libwebp-dev libtool-bin \
-software-properties-common
+software-properties-common cmake libjson-glib-dev libgdk-pixbuf2.0-dev
 
 cd
 curl -LO# https://get.bitlbee.org/src/bitlbee-$BITLBEE_VERSION.tar.gz
@@ -20,8 +22,9 @@ git clone https://github.com/jgeboski/bitlbee-steam.git
 git clone https://github.com/matrix-org/purple-matrix.git
 git clone https://github.com/EionRobb/purple-mattermost.git
 git clone https://github.com/EionRobb/purple-instagram.git
+git clone --recurse-submodules https://github.com/hoehermann/purple-signald.git
 
-# # bitlbee
+# bitlbee
 tar zxvf bitlbee-$BITLBEE_VERSION.tar.gz
 cd bitlbee-$BITLBEE_VERSION
 ./configure --jabber=1 --otr=1 --purple=1
@@ -109,6 +112,14 @@ cd purple-instagram
 make
 make install
 
+# purple-signald
+cd
+mkdir -p purple-signald/build
+cd purple-signald/build
+cmake ..
+make
+make install
+
 # libtool --finish
 libtool --finish /usr/local/lib/bitlbee
 
@@ -116,8 +127,10 @@ libtool --finish /usr/local/lib/bitlbee
 apt autoremove --purge -y
 apt remove -y --purge autoconf automake autotools-dev binutils binutils-common binutils-x86-64-linux-gnu build-essential \
 bzip2 cpp* dpkg-dev gettext gettext-base libbinutils libgcc-*-dev libsqlite3-dev libstdc++-*-dev \
-libtasn1-*-dev libtool libtool-bin m4 make nettle-dev patch xz-utils
+libtasn1-*-dev libtool libtool-bin m4 make nettle-dev patch xz-utils cmake libjson-glib-dev libgdk-pixbuf2.0-dev
+
 apt clean
+
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /tmp/*
 cd
 rm -fr /root/build.sh
@@ -133,6 +146,7 @@ rm -fr bitlbee-steam
 rm -fr purple-matrix
 rm -fr purple-mattermost
 rm -fr purple-instagram
+rm -fr purple-signald
 
 # add user bitlbee
 adduser --system --home /var/lib/bitlbee --disabled-password --disabled-login --shell /usr/sbin/nologin bitlbee
