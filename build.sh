@@ -17,7 +17,8 @@ git clone https://github.com/EionRobb/purple-hangouts.git
 git clone https://alexschroeder.ch/cgit/bitlbee-mastodon
 git clone https://github.com/EionRobb/purple-rocketchat.git
 curl -LO# https://github.com/sm00th/bitlbee-discord/archive/0.4.3.tar.gz
-git clone https://github.com/dylex/slack-libpurple.git
+#git clone https://github.com/dylex/slack-libpurple.git
+git clone https://github.com/kacf/slack-libpurple.git
 git clone https://github.com/jgeboski/bitlbee-steam.git
 git clone https://github.com/matrix-org/purple-matrix.git
 git clone https://github.com/EionRobb/purple-mattermost.git
@@ -85,6 +86,7 @@ make install
 # slack-libpurple
 cd
 cd slack-libpurple
+git checkout -b two_tokens origin/two_tokens
 make install
 
 # bitlbee-steam
